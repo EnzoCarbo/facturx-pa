@@ -1,0 +1,21 @@
+name: Fonctionnalité
+description: Une nouvelle règle, un adaptateur de PA, une amélioration
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Besoin
+      description: Le problème à résoudre ou la règle de la réforme concernée.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposition
+      description: API envisagée, fichiers concernés.
+  - type: input
+    id: source
+    attributes:
+      label: Source réglementaire
+      description: Lien vers le texte officiel ou la doc de la PA, si applicable.
