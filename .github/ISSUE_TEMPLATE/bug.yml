@@ -1,0 +1,24 @@
+name: Bug
+description: Un comportement incorrect ou une facture mal validée
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Ce qui se passe, et ce qui devrait se passer.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Facture d'entrée (données fictives uniquement) et appel effectué.
+      render: ts
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version de facturx-pa
+      placeholder: "0.1.0"
