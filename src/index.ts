@@ -1,2 +1,3 @@
-// Point d'entrée public de facturx-pa. Les exports sont ajoutés au fil des étapes.
-export {};
+export * from "./core/model.js";
+export * from "./core/money.js";
+export * from "./core/totals.js";
