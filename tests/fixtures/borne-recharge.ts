@@ -1,18 +1,7 @@
 import type { InvoiceInputData } from "../../src/index.js";
 import { buyerLogistiqueDuRhone, sellerVoltInstall } from "./parties.js";
 
-/**
- * Pose d'une borne de recharge sur le parking d'une entreprise : matériel + main-d'œuvre.
- *
- * Totaux attendus (vérifiés à la main) :
- *   Borne 7,4 kW               1     × 899,00 € = 899,00 €
- *   Protection électrique      1     × 185,50 € = 185,50 €
- *   Main-d'œuvre               3,5 h ×  64,99 € = 227,465 → 227,47 €   (arrondi de ligne)
- *   Mise en service            1     ×  90,00 € =  90,00 €
- *   Total HT                                     1 401,97 €
- *   TVA 20 %                1 401,97 × 0,2 = 280,394 → 280,39 €         (arrondi par taux)
- *   Total TTC                                    1 682,36 €
- */
+/** Pose d'une borne de recharge pour une entreprise : matériel + main-d'œuvre, TVA 20 %. */
 export const borneRechargeInvoice: InvoiceInputData = {
   number: "FAC-2026-0042",
   issueDate: "2026-10-07",
@@ -58,6 +47,7 @@ export const borneRechargeInvoice: InvoiceInputData = {
   paymentTerms: "Paiement à 30 jours par virement. Pénalités de retard : 3 fois le taux d'intérêt légal. Indemnité forfaitaire pour frais de recouvrement : 40 €.",
 };
 
+// Main-d'œuvre : 3,5 × 64,99 = 227,465 → 227,47 € ; TVA : 1 401,97 × 20 % = 280,394 → 280,39 €
 export const BORNE_RECHARGE_EXPECTED = {
   lineTotals: [89_900, 18_550, 22_747, 9_000],
   totalHT: 140_197,

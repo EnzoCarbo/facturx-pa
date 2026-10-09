@@ -1,21 +1,12 @@
-/**
- * Seul module autorisé à faire des calculs monétaires.
- *
- * - Les montants sont des centimes (entiers).
- * - Les taux sont des points de base (entiers) : 2000 = 20 %, 550 = 5,5 %.
- * - Les quantités acceptent au plus 3 décimales (ex. 3,5 heures).
- * - Arrondi commercial : au plus proche, demi-unité éloignée de zéro (0,5 → 1 ; -0,5 → -1).
- *
- * Tous les calculs passent par des entiers : aucun flottant n'intervient dans un montant.
- */
+// Seul fichier qui fait des calculs d'argent. Tout est en entiers, jamais de flottants.
 
-/** Montant en centimes d'euro (entier). */
+/** Montant en centimes : 899,00 € = 89900. */
 export type Cents = number;
 
-/** Taux en points de base (entier) : 10 000 = 100 %. */
+/** Taux en points de base : 20 % = 2000, 5,5 % = 550. */
 export type BasisPoints = number;
 
-/** Nombre maximal de décimales autorisées pour une quantité. */
+/** Une quantité a au plus 3 décimales (ex. 3,5 heures). */
 export const QUANTITY_DECIMALS = 3;
 const QUANTITY_SCALE = 10 ** QUANTITY_DECIMALS;
 const BASIS_POINTS_SCALE = 10_000;
@@ -30,17 +21,13 @@ export function assertCents(value: number, label = "montant"): asserts value is 
   }
 }
 
-/** Vrai si la quantité a au plus QUANTITY_DECIMALS décimales. */
 export function hasValidQuantityPrecision(quantity: number): boolean {
   if (!Number.isFinite(quantity)) return false;
   const scaled = quantity * QUANTITY_SCALE;
   return Math.abs(scaled - Math.round(scaled)) < 1e-6;
 }
 
-/**
- * Division entière arrondie au plus proche, demi-unité éloignée de zéro.
- * `numerator` doit être un entier sûr, `denominator` un entier strictement positif.
- */
+/** Division arrondie au plus proche ; 0,5 s'arrondit en s'éloignant de zéro. */
 export function divideAndRound(numerator: number, denominator: number): number {
   if (!Number.isSafeInteger(numerator)) {
     throw new RangeError(`Dépassement de capacité dans un calcul monétaire (${numerator}).`);
@@ -68,7 +55,7 @@ export function multiplyByQuantity(unitPrice: Cents, quantity: number): Cents {
   return divideAndRound(unitPrice * scaledQuantity, QUANTITY_SCALE);
 }
 
-/** Applique un taux (en points de base) à un montant, arrondi au centime. */
+/** Montant × taux, arrondi au centime. */
 export function applyRate(amount: Cents, rate: BasisPoints): Cents {
   assertCents(amount);
   if (!Number.isSafeInteger(rate) || rate < 0) {
@@ -87,10 +74,7 @@ export function addCents(...amounts: Cents[]): Cents {
   return total;
 }
 
-/**
- * Formate un montant en euros à la française : "1 234,56 €".
- * Séparateur de milliers : espace fine insécable (U+202F) ; avant le symbole : espace insécable (U+00A0).
- */
+/** 168236 → "1 682,36 €" */
 export function formatEuros(amount: Cents): string {
   assertCents(amount);
   const sign = amount < 0 ? "-" : "";
@@ -100,7 +84,7 @@ export function formatEuros(amount: Cents): string {
   return `${sign}${euros},${cents} €`;
 }
 
-/** Formate un taux en pourcentage : 2000 → "20 %", 550 → "5,5 %". */
+/** 550 → "5,5 %" */
 export function formatRate(rate: BasisPoints): string {
   const whole = Math.trunc(rate / 100);
   const decimals = (rate % 100).toString().padStart(2, "0").replace(/0+$/, "");

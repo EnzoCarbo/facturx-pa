@@ -2,22 +2,19 @@ import { addCents, applyRate, multiplyByQuantity, type BasisPoints, type Cents }
 import type { InvoiceLine } from "./model.js";
 
 export interface LineTotal {
-  /** Position de la ligne dans la facture (0-based). */
   index: number;
   totalHT: Cents;
 }
 
 export interface VatBreakdownEntry {
   rate: BasisPoints;
-  /** Somme des HT des lignes à ce taux. */
   baseHT: Cents;
-  /** TVA calculée sur la base regroupée (et non ligne par ligne). */
   vatAmount: Cents;
 }
 
 export interface InvoiceTotals {
   lines: LineTotal[];
-  /** Un élément par taux présent, du plus élevé au plus bas. */
+  /** Un élément par taux, du plus élevé au plus bas. */
   vatBreakdown: VatBreakdownEntry[];
   totalHT: Cents;
   totalVAT: Cents;
@@ -28,12 +25,7 @@ export function computeLineTotal(line: Pick<InvoiceLine, "unitPriceHT" | "quanti
   return multiplyByQuantity(line.unitPriceHT, line.quantity);
 }
 
-/**
- * Calcule les totaux d'une facture.
- *
- * La TVA est calculée par taux sur la somme des HT de ce taux, puis arrondie une seule fois
- * (méthode EN 16931), ce qui évite le cumul des arrondis ligne par ligne.
- */
+/** La TVA est arrondie une fois par taux, pas ligne par ligne. */
 export function computeTotals(invoice: { lines: readonly InvoiceLine[] }): InvoiceTotals {
   const lines = invoice.lines.map((line, index) => ({ index, totalHT: computeLineTotal(line) }));
 

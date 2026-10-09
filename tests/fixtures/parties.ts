@@ -2,9 +2,7 @@ import type { InvoiceInputData } from "../../src/index.js";
 
 type PartyData = InvoiceInputData["seller"];
 
-/**
- * Parties fictives. Les SIREN sont inventés mais respectent la clé de Luhn.
- */
+/** SIREN inventés, mais valides (clé de Luhn). */
 export const FICTIVE_SIRENS = {
   seller: "123456782",
   buyer: "987654324",
